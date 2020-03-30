@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const Grudge = ({ grudge, onForgive }) => {
+// memo = returns the same thing
+// if the props haven't changed
+// thus -> avoiding a rerender
+const Grudge = memo(({ grudge, onForgive }) => {
   const forgive = () => onForgive(grudge.id);
+
+  console.log(`Rendering Grudge ${grudge.id}`);
 
   return (
     <article className="Grudge">
@@ -15,6 +20,6 @@ const Grudge = ({ grudge, onForgive }) => {
       </div>
     </article>
   );
-};
+});
 
 export default Grudge;

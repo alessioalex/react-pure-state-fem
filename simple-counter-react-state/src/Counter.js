@@ -1,51 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 
-/*
-// extracting logic for reuse and testability
-const increment = (state, props) => {
-  const { count } = state;
-  const { max, step } = props;
+class Counter extends Component {
+  state = {
+    count: 0,
+  };
 
-  if (count < max) {
-    return { count: count + step };
+  increment = () => {
+    this.setState(({ count }) => ({
+      count: count + 1,
+    }));
+  };
+
+  decrement = () => {
+    this.setState(({ count }) => ({
+      count: count - 1,
+    }));
+  };
+
+  reset = () => {
+    this.setState(() => ({
+      count: 0,
+    }));
+  };
+
+  render() {
+    const { count } = this.state;
+
+    return (
+      <div className="Counter">
+        <p className="count">{count}</p>
+        <section className="controls">
+          <button onClick={this.increment}>Increment</button>
+          <button onClick={this.decrement}>Decrement</button>
+          <button onClick={this.reset}>Reset</button>
+        </section>
+      </div>
+    );
   }
-
-  return { count };
-};
-*/
-
-const getStateFromLocalStorage = () => {
-  const count = parseInt(localStorage.getItem('countState'), 0);
-
-  return count || 0;
-};
-
-const setStateInLocalStorage = count => {
-  localStorage.setItem('countState', count);
-};
-
-const Counter = ({ max, step }) => {
-  const [count, setCount] = useState(getStateFromLocalStorage());
-
-  const increment = () => setCount(count < max ? count + step : count);
-  const decrement = () => setCount(count - step);
-  const reset = () => setCount(0);
-
-  useEffect(() => {
-    document.title = `Count is ${count}`;
-    setStateInLocalStorage(count);
-  }, [count]);
-
-  return (
-    <div className="Counter">
-      <p className="count">{count}</p>
-      <section className="controls">
-        <button onClick={increment}>Increment</button>
-        <button onClick={decrement}>Decrement</button>
-        <button onClick={reset}>Reset</button>
-      </section>
-    </div>
-  );
-};
+}
 
 export default Counter;

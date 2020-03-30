@@ -20,7 +20,13 @@ const Counter = ({ max, step }) => {
   const reset = () => setCount(0);
 
   useEffect(() => {
-    document.title = `Count is ${count}`;
+    // adding a setInterval for each value change
+    const id = setInterval(() => {
+      console.log(`Count: ${count}`);
+    }, 1500);
+
+    // cleanup function
+    return () => clearInterval(id);
   }, [count]);
 
   return (

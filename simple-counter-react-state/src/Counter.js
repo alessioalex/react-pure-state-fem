@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
-/*
-// extracting logic for reuse and testability
-const increment = (state, props) => {
-  const { count } = state;
-  const { max, step } = props;
+const useLocalStorage = (initialState, key) => {
+  const getDefaultState = () => {
+    const storage = localStorage.getItem(key);
+    return storage ? JSON.parse(storage).value : initialState;
+  };
 
-  if (count < max) {
-    return { count: count + step };
-  }
+  const [value, setValue] = useState(getDefaultState());
 
-  return { count };
-};
-*/
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify({ value }));
+  }, [key, value]);
 
-const getStateFromLocalStorage = () => {
-  const count = parseInt(localStorage.getItem('countState'), 0);
-
-  return count || 0;
-};
-
-const setStateInLocalStorage = count => {
-  localStorage.setItem('countState', count);
+  return [value, setValue];
 };
 
 const Counter = ({ max, step }) => {
-  const [count, setCount] = useState(getStateFromLocalStorage());
+  const [count, setCount] = useLocalStorage(0, 'counter');
 
   const increment = () => setCount(count < max ? count + step : count);
   const decrement = () => setCount(count - step);
@@ -33,7 +24,6 @@ const Counter = ({ max, step }) => {
 
   useEffect(() => {
     document.title = `Count is ${count}`;
-    setStateInLocalStorage(count);
   }, [count]);
 
   return (

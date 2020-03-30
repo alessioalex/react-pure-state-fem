@@ -1,7 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Counter = ({ max, step }) => {
   const [count, setCount] = useState(0);
+
+  const countRef = useRef();
+  // { current: null }
+
+  let message = '';
+  if (countRef.current < count) {
+    message = 'Higher';
+  } else {
+    message = 'Lower';
+  }
+
+  countRef.current = count;
 
   const increment = () => setCount(count < max ? count + step : count);
   const decrement = () => setCount(count - step);
@@ -13,6 +25,7 @@ const Counter = ({ max, step }) => {
 
   return (
     <div className="Counter">
+      <p>{message}</p>
       <p className="count">{count}</p>
       <section className="controls">
         <button onClick={increment}>Increment</button>

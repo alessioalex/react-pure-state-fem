@@ -13,7 +13,7 @@ const Application = () => {
       </h3>
 
       <section className="Counters">
-        <Counter max={15} step={5} />
+        <Counter max={99} step={1} />
       </section>
     </main>
   );

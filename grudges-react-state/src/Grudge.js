@@ -1,10 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
+import { GrudgeContext } from './GrudgeContext';
 
-// memo = returns the same thing
-// if the props haven't changed
-// thus -> avoiding a rerender
-const Grudge = memo(({ grudge, onForgive }) => {
-  const forgive = () => onForgive(grudge.id);
+const Grudge = memo(({ grudge }) => {
+  const { toggleForgiveness } = useContext(GrudgeContext);
+  const forgive = () => toggleForgiveness(grudge.id);
 
   console.log(`Rendering Grudge ${grudge.id}`);
 

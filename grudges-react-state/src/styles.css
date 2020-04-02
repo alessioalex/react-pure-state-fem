@@ -32,6 +32,7 @@ button:hover,
 .button:hover,
 input[type='submit']:hover {
   background-color: #f65e81;
+  cursor: pointer;
 }
 
 button:active,
@@ -78,4 +79,9 @@ input[type='submit'].full-width {
 
 .NewGrudge-input {
   width: 100%;
+}
+
+button:disabled {
+  background-color: #fff;
+  color: #f4466e;
 }

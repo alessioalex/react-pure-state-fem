@@ -34,13 +34,22 @@ const reducer = (state = defaultState, action) => {
   }
 
   if (action.type === 'UNDO') {
-    console.log('WE ARE GOING TO UNDO!');
     const [newPresent, ...newPast] = state.past;
 
     return {
       past: newPast,
       present: newPresent,
       future: [state.present, ...state.future]
+    };
+  }
+
+  if (action.type === 'REDO') {
+    const [newPresent, ...newFuture] = state.future;
+
+    return {
+      past: [state.present, ...state.past],
+      present: newPresent,
+      future: newFuture
     };
   }
 
@@ -89,12 +98,14 @@ export const GrudgeProvider = ({ children }) => {
   );
 
   const undo = useCallback(() => dispatch({ type: 'UNDO' }), [dispatch]);
+  const redo = useCallback(() => dispatch({ type: 'REDO' }), [dispatch]);
 
   const value = {
     grudges,
     addGrudge,
     toggleForgiveness,
     undo,
+    redo,
     isPast,
     isFuture
   };

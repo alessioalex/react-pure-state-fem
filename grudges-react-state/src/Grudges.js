@@ -4,6 +4,7 @@ import { GrudgeContext } from './GrudgeContext';
 
 const Grudges = () => {
   const { grudges } = useContext(GrudgeContext);
+  console.log({ grudges });
 
   return (
     <section className="Grudges">

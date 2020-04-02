@@ -6,19 +6,42 @@ import initialState from './initialState';
 const GRUDGE_ADD = 'GRUDGE_ADD';
 const GRUDGE_FORGIVE = 'GRUDGE_FORGIVE';
 
-const reducer = (state, action) => {
+const reducer = (state = defaultState, action) => {
   if (action.type === GRUDGE_ADD) {
-    return [action.payload, ...state];
+    const newPresent = [{ ...action.payload }, ...state.present];
+
+    return {
+      past: [state.present, ...state.past],
+      present: newPresent,
+      future: []
+    };
   }
 
   if (action.type === GRUDGE_FORGIVE) {
-    return state.map(grudge => {
+    const newPresent = state.present.map(grudge => {
       if (grudge.id !== action.payload.id) {
         return grudge;
       }
 
       return { ...grudge, forgiven: !grudge.forgiven };
     });
+
+    return {
+      past: [state.present, ...state.past],
+      present: newPresent,
+      future: []
+    };
+  }
+
+  if (action.type === 'UNDO') {
+    console.log('WE ARE GOING TO UNDO!');
+    const [newPresent, ...newPast] = state.past;
+
+    return {
+      past: newPast,
+      present: newPresent,
+      future: [state.present, ...state.future]
+    };
   }
 
   return state;
@@ -26,8 +49,17 @@ const reducer = (state, action) => {
 
 export const GrudgeContext = createContext();
 
+const defaultState = {
+  past: [],
+  present: initialState,
+  future: []
+};
+
 export const GrudgeProvider = ({ children }) => {
-  const [grudges, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, defaultState);
+  const grudges = state.present;
+  const isPast = !!state.past.length;
+  const isFuture = !!state.future.length;
 
   const addGrudge = useCallback(
     ({ person, reason }) => {
@@ -56,7 +88,16 @@ export const GrudgeProvider = ({ children }) => {
     [dispatch]
   );
 
-  const value = { grudges, addGrudge, toggleForgiveness };
+  const undo = useCallback(() => dispatch({ type: 'UNDO' }), [dispatch]);
+
+  const value = {
+    grudges,
+    addGrudge,
+    toggleForgiveness,
+    undo,
+    isPast,
+    isFuture
+  };
 
   return (
     <GrudgeContext.Provider value={value}>{children}</GrudgeContext.Provider>
